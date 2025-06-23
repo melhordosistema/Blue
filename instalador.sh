@@ -3,19 +3,25 @@
 clear
 echo -e "\033[1;34m🔧 Iniciando instalação do minerador CCMiner no Termux...\033[0m"
 
-# Preparação
-termux-setup-storage
+# Verificação de acesso ao armazenamento
+if [ ! -d "$HOME/storage" ]; then
+    termux-setup-storage
+fi
+
+# Atualização de pacotes
 pkg update -y && pkg upgrade -y
+
+# Instalação de dependências
 pkg install -y wget git openssl-tool clang make automake autoconf libtool
 
-# Clonagem do projeto
+# Clonagem do repositório do ccminer
 git clone --single-branch -b ARM https://github.com/monkins1010/ccminer.git
 cd ccminer
 
-# Tornar scripts executáveis
+# Permissões para scripts
 chmod +x build.sh configure.sh autogen.sh
 
-# Compilar
+# Compilação
 ./build.sh
 
 clear
