@@ -43,6 +43,16 @@ function instalar() {
     cd
 
     configurar
+
+    # Criar atalho global para o comando 'menu'
+    cp "$0" "$PREFIX/bin/menu"
+    chmod +x "$PREFIX/bin/menu"
+
+    echo -e "\n\033[1;35m===========================================\033[0m"
+    echo -e "\033[1;32m✅ Instalação concluída com sucesso.\033[0m"
+    echo -e "\033[1;36m🧭 Para abrir o painel a qualquer momento, digite:\033[0m \033[1;33mmenu\033[0m"
+    echo -e "\033[1;35m===========================================\033[0m"
+    read -p $'\nPressione Enter para voltar ao menu...'
 }
 
 function configurar() {
@@ -106,10 +116,11 @@ function desinstalar() {
     pkill ccminer > /dev/null 2>&1
     rm -rf "$CCMINER_DIR"
     rm -f "$CONFIG"
+    rm -f "$PREFIX/bin/menu"
     pkg uninstall -y git wget openssl-tool clang make automake autoconf libtool > /dev/null 2>&1
 
     echo -e "\033[1;32m✅ Desinstalação concluída. Sistema limpo.\033[0m"
-    read -p $'\nPressione Enter para voltar ao menu...'
+    read -p $'\nPressione Enter para sair...'
 }
 
 while true; do
@@ -129,7 +140,7 @@ while true; do
         1) instalar;;
         2) iniciar;;
         3) configurar;;
-        4) desinstalar;;
+        4) desinstalar; exit;;
         0) exit;;
         *) echo -e "\033[1;31m✖ Opção inválida.\033[0m"; sleep 1;;
     esac
