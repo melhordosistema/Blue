@@ -2,12 +2,21 @@
 
 CONFIG="$HOME/.miner_config"
 CCMINER_DIR="$HOME/ccminer"
+INSTALADO=""
 
 function cabecalho() {
     echo -e "\033[1;35m=======================================\033[0m"
     echo -e "\033[1;33m🚀 Criado por \033[1;31mMelhor Do Sistema\033[1;33m 🚀\033[0m"
     echo -e "\033[1;36m📲 Perfil Kwai: melhor_do_sistema\033[0m"
     echo -e "\033[1;35m=======================================\033[0m"
+}
+
+function verificar_instalacao() {
+    if [ -x "$CCMINER_DIR/ccminer" ]; then
+        INSTALADO=" (já está instalado — execute apenas se quiser reinstalar)"
+    else
+        INSTALADO=""
+    fi
 }
 
 function instalar() {
@@ -104,10 +113,11 @@ function desinstalar() {
 }
 
 while true; do
+    verificar_instalacao
     clear
     cabecalho
     echo -e "\n\033[1;36mEscolha uma opção:\033[0m"
-    echo "[1] Instalar minerador"
+    echo "[1] Instalar minerador$INSTALADO"
     echo "[2] Iniciar mineração"
     echo "[3] Atualizar carteira/pool"
     echo "[4] Desinstalar tudo"
