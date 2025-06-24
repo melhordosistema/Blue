@@ -4,13 +4,14 @@ CONFIG="$HOME/.miner_config"
 CCMINER_DIR="$HOME/ccminer"
 
 function cabecalho() {
-    clear
     echo -e "\033[1;35m=======================================\033[0m"
     echo -e "\033[1;33m🚀 Criado por \033[1;31mMelhor Do Sistema\033[1;33m 🚀\033[0m"
+    echo -e "\033[1;36m📲 Perfil Kwai: melhor_do_sistema\033[0m"
     echo -e "\033[1;35m=======================================\033[0m"
 }
 
 function instalar() {
+    clear
     cabecalho
     echo -e "\033[1;34m🔧 Iniciando instalação do minerador CCMiner...\033[0m"
 
@@ -50,11 +51,13 @@ function configurar() {
     echo -e "$THREADS" >> "$CONFIG"
 
     echo -e "\n\033[1;32m✅ Configuração salva com sucesso.\033[0m"
+    read -p $'\nPressione Enter para voltar ao menu...'
 }
 
 function iniciar() {
     if [ ! -f "$CONFIG" ]; then
         echo -e "\033[1;31m⚠ Nenhuma configuração encontrada. Execute a instalação primeiro.\033[0m"
+        read -p $'\nPressione Enter para voltar ao menu...'
         return
     fi
 
@@ -62,6 +65,7 @@ function iniciar() {
     WALLET=$(sed -n '2p' "$CONFIG")
     THREADS=$(sed -n '3p' "$CONFIG")
 
+    clear
     cabecalho
     echo -e "\033[1;32m⛏️ Iniciando mineração...\033[0m"
     sleep 1
@@ -71,6 +75,7 @@ function iniciar() {
 }
 
 function desinstalar() {
+    clear
     cabecalho
     echo -e "\033[1;31m🧹 Iniciando desinstalação do minerador...\033[0m"
 
@@ -80,9 +85,11 @@ function desinstalar() {
     pkg uninstall -y git wget openssl-tool clang make automake autoconf libtool > /dev/null 2>&1
 
     echo -e "\033[1;32m✅ Desinstalação concluída. Sistema limpo.\033[0m"
+    read -p $'\nPressione Enter para voltar ao menu...'
 }
 
 while true; do
+    clear
     cabecalho
     echo -e "\n\033[1;36mEscolha uma opção:\033[0m"
     echo "[1] Instalar minerador"
