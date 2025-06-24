@@ -13,7 +13,7 @@ function cabecalho() {
 
 function verificar_instalacao() {
     if [ -x "$CCMINER_DIR/ccminer" ]; then
-        INSTALADO=" (já está instalado — execute apenas se quiser reinstalar)"
+        INSTALADO="(já está instalado — execute apenas se quiser reinstalar)"
     else
         INSTALADO=""
     fi
@@ -128,7 +128,11 @@ while true; do
     clear
     cabecalho
     echo -e "\n\033[1;36mEscolha uma opção:\033[0m"
-    echo "[1] Instalar minerador$INSTALADO"
+    if [ -n "$INSTALADO" ]; then
+        echo -e "[1] Instalar minerador \033[1;33m$INSTALADO\033[0m"
+    else
+        echo "[1] Instalar minerador"
+    fi
     echo "[2] Iniciar mineração"
     echo "[3] Atualizar carteira/pool"
     echo "[4] Desinstalar tudo"
