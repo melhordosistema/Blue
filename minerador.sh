@@ -91,6 +91,7 @@ while true; do
     echo "[4] Desinstalar tudo"
     echo "[0] Sair"
     read -p $'\n➤ Opção: ' OPCAO
+    [ -z "$OPCAO" ] && continue
 
     case $OPCAO in
         1) instalar;;
@@ -100,5 +101,4 @@ while true; do
         0) exit;;
         *) echo -e "\033[1;31m✖ Opção inválida.\033[0m"; sleep 1;;
     esac
-
 done
