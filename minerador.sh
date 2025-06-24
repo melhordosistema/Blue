@@ -3,6 +3,7 @@
 CONFIG="$HOME/.miner_config"
 CCMINER_DIR="$HOME/ccminer"
 INSTALADO=""
+FALTANDO_CONFIG=""
 
 function cabecalho() {
     echo -e "\033[1;35m=======================================\033[0m"
@@ -13,9 +14,24 @@ function cabecalho() {
 
 function verificar_instalacao() {
     if [ -x "$CCMINER_DIR/ccminer" ]; then
-        INSTALADO="(já está instalado — execute apenas se quiser reinstalar)"
+        if [ -f "$CONFIG" ]; then
+            POOL=$(sed -n '1p' "$CONFIG")
+            WALLET=$(sed -n '2p' "$CONFIG")
+            THREADS=$(sed -n '3p' "$CONFIG")
+            if [ -n "$POOL" ] && [ -n "$WALLET" ] && [ -n "$THREADS" ]; then
+                INSTALADO=" \033[1;33m(já está instalado — execute apenas se quiser reinstalar)\033[0m"
+                FALTANDO_CONFIG=""
+            else
+                INSTALADO=""
+                FALTANDO_CONFIG="sim"
+            fi
+        else
+            INSTALADO=""
+            FALTANDO_CONFIG="sim"
+        fi
     else
         INSTALADO=""
+        FALTANDO_CONFIG=""
     fi
 }
 
@@ -90,7 +106,8 @@ function configurar() {
 
 function iniciar() {
     if [ ! -f "$CONFIG" ]; then
-        echo -e "\033[1;31m⚠ Nenhuma configuração encontrada. Execute a instalação primeiro.\033[0m"
+        echo -e "\033[1;31m⚠ CCMiner está instalado, mas ainda não há pool e carteira cadastrados.\033[0m"
+        echo -e "\033[1;36mUse a opção [3] para configurar antes de minerar.\033[0m"
         read -p $'\nPressione Enter para voltar ao menu...'
         return
     fi
@@ -98,6 +115,13 @@ function iniciar() {
     POOL=$(sed -n '1p' "$CONFIG")
     WALLET=$(sed -n '2p' "$CONFIG")
     THREADS=$(sed -n '3p' "$CONFIG")
+
+    if [ -z "$POOL" ] || [ -z "$WALLET" ] || [ -z "$THREADS" ]; then
+        echo -e "\033[1;31m⚠ CCMiner está instalado, mas a configuração está incompleta.\033[0m"
+        echo -e "\033[1;36mUse a opção [3] para cadastrar pool, carteira e threads.\033[0m"
+        read -p $'\nPressione Enter para voltar ao menu...'
+        return
+    fi
 
     clear
     cabecalho
@@ -129,9 +153,12 @@ while true; do
     cabecalho
     echo -e "\n\033[1;36mEscolha uma opção:\033[0m"
     if [ -n "$INSTALADO" ]; then
-        echo -e "[1] Instalar minerador \033[1;33m$INSTALADO\033[0m"
+        echo -e "[1] Instalar minerador$INSTALADO"
     else
         echo "[1] Instalar minerador"
+        if [ "$FALTANDO_CONFIG" = "sim" ]; then
+            echo -e "    \033[1;31m⚠️ Instalação incompleta: cadastre pool e carteira na opção 3.\033[0m"
+        fi
     fi
     echo "[2] Iniciar mineração"
     echo "[3] Atualizar carteira/pool"
