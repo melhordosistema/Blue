@@ -37,14 +37,29 @@ function instalar() {
 }
 
 function configurar() {
-    echo -e "\n\033[1;36mInforme o endereço da pool (ex: stratum+tcp://ap.luckpool.net:3956):\033[0m"
-    read -p "➤ Pool: " POOL
+    while true; do
+        echo -e "\n\033[1;36mInforme o endereço da pool (ex: stratum+tcp://ap.luckpool.net:3956):\033[0m"
+        read -p "➤ Pool: " POOL
+        [ -n "$(echo "$POOL" | tr -d '[:space:]')" ] && break
+        echo -e "\033[1;31m✖ Campo obrigatório. Por favor, insira um pool válido.\033[0m"
+    done
 
-    echo -e "\n\033[1;36mInforme sua carteira + nome do trabalhador (ex: RVx...MeuNome):\033[0m"
-    read -p "➤ Carteira.Trabalhador: " WALLET
+    while true; do
+        echo -e "\n\033[1;36mInforme sua carteira + nome do trabalhador (ex: SuaCarteira.MeuNome):\033[0m"
+        read -p "➤ Carteira.Trabalhador: " WALLET
+        [ -n "$(echo "$WALLET" | tr -d '[:space:]')" ] && break
+        echo -e "\033[1;31m✖ Campo obrigatório. Por favor, insira uma carteira válida.\033[0m"
+    done
 
-    echo -e "\n\033[1;36mQuantidade de threads (núcleos de CPU a usar):\033[0m"
-    read -p "➤ Threads: " THREADS
+    while true; do
+        echo -e "\n\033[1;36mQuantidade de threads (núcleos de CPU a usar):\033[0m"
+        read -p "➤ Threads: " THREADS
+        if [[ "$THREADS" =~ ^[1-9][0-9]*$ ]]; then
+            break
+        else
+            echo -e "\033[1;31m✖ Por favor, insira um número válido maior que zero.\033[0m"
+        fi
+    done
 
     echo -e "$POOL" > "$CONFIG"
     echo -e "$WALLET" >> "$CONFIG"
