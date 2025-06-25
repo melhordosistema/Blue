@@ -60,9 +60,10 @@ function instalar() {
 
     configurar
 
-    # Criar atalho global para o comando 'menu'
-    cp "$0" "$PREFIX/bin/menu"
-    chmod +x "$PREFIX/bin/menu"
+    # Criar comando global 'menu'
+    cp "$0" "$PREFIX/bin/menu.sh"
+    echo -e "#!/data/data/com.termux/files/usr/bin/bash\nbash $PREFIX/bin/menu.sh" > "$PREFIX/bin/menu"
+    chmod +x "$PREFIX/bin/menu" "$PREFIX/bin/menu.sh"
 
     echo -e "\n\033[1;35m===========================================\033[0m"
     echo -e "\033[1;32m✅ Instalação concluída com sucesso.\033[0m"
@@ -126,7 +127,8 @@ function iniciar() {
     clear
     cabecalho
     echo -e "\033[1;32m⛏️ Iniciando mineração...\033[0m"
-    sleep 1
+    echo -e "\033[1;31m🛑 Para parar a mineração: pressione CTRL + C\033[0m"
+    sleep 2
     cd "$CCMINER_DIR" || exit
     ./ccminer -a verus -o "$POOL" -u "$WALLET" -p x -t "$THREADS"
     cd
@@ -140,7 +142,7 @@ function desinstalar() {
     pkill ccminer > /dev/null 2>&1
     rm -rf "$CCMINER_DIR"
     rm -f "$CONFIG"
-    rm -f "$PREFIX/bin/menu"
+    rm -f "$PREFIX/bin/menu" "$PREFIX/bin/menu.sh"
     pkg uninstall -y git wget openssl-tool clang make automake autoconf libtool > /dev/null 2>&1
 
     echo -e "\033[1;32m✅ Desinstalação concluída. Sistema limpo.\033[0m"
